@@ -1,6 +1,12 @@
-ukoly = []
-
 def hlavni_menu():
+    """
+    Zobrazuje hlavní menu programu a umožňuje práci s úkoly.
+
+    Návratová hodnota:
+        None
+    """
+
+    ukoly_menu = []
     while True:
         print("\n--- Správce úkolů - Hlavní menu ---")
         print("1. Přidat úkol")
@@ -11,66 +17,108 @@ def hlavni_menu():
         volba = input("Vyber možnost (1-4): ")
 
         if volba == "1":
-            pridat_ukol()
+           ukoly_menu = pridat_ukol(ukoly_menu)
         elif volba == "2":
-            zobrazit_ukol()
+            zobrazit_ukoly(ukoly_menu)
         elif volba == "3":
-           odstranit_ukol()
+           ukoly_menu = odstranit_ukol(ukoly_menu)
         elif volba == "4":
             print("Ukončuji program., měj se hezky..")
-            exit()
+            break
         else:
             print("Neplatná volba, zkus to znovu, vyber možnost (1-4)")
 
-def pridat_ukol():
+def pridat_ukol(seznam_ukolu: list) -> list:
+    """
+    Přidá nový úkol do seznamu úkolů.
 
-    nazev = ""
-    popis = ""
+    Parametry:
+        seznam_ukolu (list): Seznam úkolů.
 
-    while not nazev or not popis:
-        nazev = input("Zadejte název úkolu:")
-        popis = input("Zadejte popis úkolu:")
+    Návratová hodnota:
+        list: Aktualizovaný seznam úkolů.
+    """
 
-        if not nazev or not popis:
-            print("Chyba! Název ani Popis nesmí být prázdé. Zadejte Název a Popis úkolu!")
-            continue
+    # Validace názvu
+    while True:
+        nazev = input("Zadejte název úkolu: ")
+
+        if not nazev.strip():
+            print("Chyba! Název nesmí být prázdný.")
         else:
-            ukol = {
-                "nazev": nazev,
-                "popis": popis
-                }
-            ukoly.append(ukol)
-            print("Úkol byl úspěšně přidán")
             break
 
-def zobrazit_ukol():
-    print("Seznam úkolů:")
+    # Validace popisu
+    while True:
+        popis = input("Zadejte popis úkolu: ")
 
-    for i in range(len(ukoly)):
-        #print(ukoly[i]["popis"])
-        print(f"{i+1}. {ukoly[i]["nazev"]} - {ukoly[i]["popis"]}")
+        if not popis.strip():
+            print("Chyba! Popis nesmí být prázdný.")
+        else:
+            break
+
+    ukol = {
+        "nazev": nazev,
+        "popis": popis
+    }
+
+    seznam_ukolu.append(ukol)
+    print("Úkol byl úspěšně přidán")
+    return seznam_ukolu
+
+def zobrazit_ukoly(seznam_ukolu: list):
+    """
+    Zobrazí všechny úkoly uložené v seznamu.
+
+    Parametry:
+        seznam_ukolu (list): Seznam úkolů.
+    """
+
+    if not seznam_ukolu:
+        print("Seznam je prázdný")
+    else:
+        print("Seznam úkolů:")
 
 
-def odstranit_ukol():
-    if not ukoly:
+        for i, ukol in enumerate(seznam_ukolu, start=1):
+
+            print(f"{i}. {ukol['nazev']} - {ukol['popis']}")
+
+
+def odstranit_ukol(seznam_ukolu: list) -> list:
+    """
+    Odstraní vybraný úkol ze seznamu úkolů.
+
+    Parametry:
+        seznam_ukolu (list): Seznam úkolů.
+
+    Návratová hodnota:
+        list: Aktualizovaný seznam úkolů.
+    """
+
+    ukoly_odstranit = seznam_ukolu
+
+    if not ukoly_odstranit:
         print("Seznam úkolů je prázdný.")
-        return
+        return ukoly_odstranit
 
-    zobrazit_ukol()
+    zobrazit_ukoly(ukoly_odstranit)
 
     volba = input("Zadejte číslo úkolu,který chcete odstranit:")
 
     if not volba.isdigit():
         print("Neplatný vstup – zadejte číslo.")
-        return
+        return ukoly_odstranit
 
     index = int(volba) - 1
 
-    if index < 0 or index >= len(ukoly):
+    if index < 0 or index >= len(ukoly_odstranit):
         print("Neplatné číslo úkolu.")
-        return
+        return ukoly_odstranit
 
-    print(f"Úkol '{ukoly[index]['nazev']}' byl úspěšně odstraněn")
-    ukoly.pop(index)
+    print(f"Úkol '{ukoly_odstranit[index]['nazev']}' byl úspěšně odstraněn")
+    ukoly_odstranit.pop(index)
+
+    return ukoly_odstranit
 
 hlavni_menu()
